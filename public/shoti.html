@@ -17,6 +17,7 @@
             background-color: #1a1a1a;
             color: #fff;
             padding: 20px;
+            transition: background-color 0.3s;
         }
 
         h1 {
@@ -81,8 +82,23 @@
             margin: 5px 0;
         }
 
-        @media (max-width: 600px) {
+        .spinner {
+            display: none;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #ff4081;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px 0;
+        }
 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
             button,
             a.button {
                 font-size: 14px;
@@ -100,9 +116,11 @@
             const mainHeader = document.getElementById("mainHeader");
             const videoInfo = document.getElementById("videoInfo");
             const myVideo = document.getElementById("myVideo");
+            const spinner = document.getElementById("spinner");
 
             loadButton.disabled = true;
             loadButton.textContent = "Loading...";
+            spinner.style.display = "block"; // Show spinner
 
             const apiURL = "https://shoti-rho.vercel.app/api/request/f";
 
@@ -122,12 +140,12 @@
                 myVideo.style.display = "block";
 
                 videoInfo.innerHTML = `
-            <h2>Video Details:</h2>
-            <p><strong>Title:</strong> ${data.title}</p>
-            <p><strong>Username:</strong> ${data.username}</p>
-            <p><strong>Nickname:</strong> ${data.nickname}</p>
-            <p><strong>Total Videos:</strong> ${data.totalvids}</p>
-        `;
+                    <h2>Video Details:</h2>
+                    <p><strong>Title:</strong> ${data.title}</p>
+                    <p><strong>Username:</strong> ${data.username}</p>
+                    <p><strong>Nickname:</strong> ${data.nickname}</p>
+                    <p><strong>Total Videos:</strong> ${data.totalvids}</p>
+                `;
                 videoInfo.style.display = "block";
 
                 mainHeader.style.display = "none";
@@ -136,7 +154,18 @@
             } catch (error) {
                 loadButton.textContent = "Error. Try Again";
                 loadButton.disabled = false;
+                videoInfo.innerHTML = `<p>Error loading video: ${error.message}</p>`;
+                videoInfo.style.display = "block";
+            } finally {
+                spinner.style.display = "none"; // Hide spinner
             }
+        }
+
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle("light-mode");
+            body.style.backgroundColor = body.classList.contains("light-mode") ? "#ffffff" : "#1a1a1a";
+            body.style.color = body.classList.contains("light-mode") ? "#000000" : "#ffffff";
         }
     </script>
 </head>
@@ -144,11 +173,13 @@
 <body>
     <div class="header" id="mainHeader">
         <h1>Random Shoti & Video Generator</h1>
-        <h2>Just enjoy this bullshit</h2>
+        <h2>Enjoy!</h2>
     </div>
     <button id="loadButton" onclick="loadVideo()">Generate Some Shoti Videos</button>
+    <div class="spinner" id="spinner"></div>
     <video id="myVideo" controls autoplay></video>
     <div id="videoInfo" class="video-info"></div>
+    <button onclick="toggleDarkMode()">Toggle Dark/Light Mode</button>
 </body>
 
 </html>
