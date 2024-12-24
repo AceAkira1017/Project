@@ -10,8 +10,6 @@ app.use(express.urlencoded({ extended: true }));
 
 const routes = [
     { path: '/', file: 'index.html' },
-    { path: '/spotify', file: 'spotify.html' },
-    { path: '/ss', file: 'ss.html' },
     { path: '/imgur', file: 'Uploader.html' },
     { path: '/shoti', file: 'shoti.html' },
     { path: '/tempmail', file: 'tempmail.html' }
