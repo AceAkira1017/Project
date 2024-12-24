@@ -29,8 +29,7 @@
             color: var(--text-color);
             line-height: 1.6;
             overflow-x: hidden;
-            background-image: none;
-            background-color: var(--background-color);
+            position: relative;
         }
 
         .header {
@@ -106,6 +105,7 @@
             font-size: 6rem;
             margin-bottom: 20px;
             color: var(--primary-color);
+            text-shadow: 0 0 var(--glow-strength) var(--primary-color);
         }
 
         .error-container p {
@@ -128,6 +128,87 @@
             color: var(--background-color);
             text-shadow: 0 0 var(--glow-strength) var(--primary-color);
         }
+
+        /* Chat Button */
+        .chat-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .chat-btn:hover {
+            background-color: #ff00e6;
+            transform: scale(1.1);
+        }
+
+        /* Chat Container */
+        .chat-container {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            background-color: rgba(6, 6, 21, 0.9);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .chat-header {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            padding: 10px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            text-align: center;
+        }
+
+        .chat-body {
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            color: var(--text-color);
+        }
+
+        .chat-footer {
+            display: flex;
+            padding: 5px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            color: var(--text-color);
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .send-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-left: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .send-btn:hover {
+            background-color: #ff00e6;
+        }
     </style>
 </head>
 
@@ -139,15 +220,25 @@
 
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="close-btn" onclick="closeMenu()">×</a>
-        <a href="https://autosharee.onrender.com/">Spamshare</a>
-        <a href="https://www.facebook.com/profile.php?id=100088690249020">Contact</a>
+        <a href="https://www.facebook.com/ace.gerome">Contact</a>
     </div>
 
     <div class="wrapper-container">
         <div class="error-container">
             <h1>404</h1>
             <p>Oops! The page does not exist.</p>
-            <a href="/index.html" class="error-link">Go Back to Home</a>
+            <a href="/" class="error-link">Go Back to Home</a>
+        </div>
+    </div>
+
+    <button class="chat-btn" onclick="toggleChat()">💬</button>
+
+    <div class="chat-container" id="chat-container">
+        <div class="chat-header">Chat</div>
+        <div class="chat-body" id="chat-body"></div>
+        <div class="chat-footer">
+            <input type="text" class="chat-input" id="chat-input" placeholder="Type a message...">
+            <button class="send-btn" onclick="sendMessage()">Send</button>
         </div>
     </div>
 
@@ -168,6 +259,19 @@
         function toggleChat() {
             const chatContainer = document.getElementById("chat-container");
             chatContainer.style.display = (chatContainer.style.display === "none" || chatContainer.style.display === "") ? "block" : "none";
+        }
+
+        function sendMessage() {
+            const input = document.getElementById("chat-input");
+            const message = input.value.trim();
+            if (message) {
+                const chatBody = document.getElementById("chat-body");
+                const messageElement = document.createElement("div");
+                messageElement.textContent = message;
+                chatBody.appendChild(messageElement);
+                input.value = ""; // Clear input
+                chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom
+            }
         }
     </script>
 </body>
