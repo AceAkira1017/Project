@@ -29,8 +29,7 @@
             color: var(--text-color);
             line-height: 1.6;
             overflow-x: hidden;
-            background-image: none;
-            background-color: var(--background-color);
+            position: relative;
         }
 
         .wrapper-container {
@@ -38,12 +37,15 @@
             margin: 0 auto;
             padding: 20px;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         h1 {
             font-size: 3rem;
             margin-bottom: 40px;
             color: var(--primary-color);
+            text-shadow: 0 0 20px var(--secondary-color);
         }
 
         .upload-area {
@@ -53,19 +55,34 @@
         .drag-drop-area {
             width: 100%;
             height: 200px;
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: rgba(255, 255, 255, 0.1);
             border: 2px dashed var(--primary-color);
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: border-color 0.3s ease;
+            transition: border-color var(--transition-speed) ease;
             border-radius: 10px;
             color: var(--text-color);
+            position: relative;
+            overflow: hidden;
         }
 
         .drag-drop-area:hover {
-            border-color: var(--primary-color);
+            border-color: var(--secondary-color);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
 
         .preview {
@@ -90,7 +107,7 @@
             display: block;
             width: 100%;
             padding: 15px;
-            background-color: #007bff;
+            background-color: var(--primary-color);
             color: var(--text-color);
             border: none;
             border-radius: 50px;
@@ -100,7 +117,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
-            transition: all 0.3s ease-in-out;
+            transition: all var(--transition-speed) ease-in-out;
         }
 
         .artB-upload:hover {
@@ -124,13 +141,32 @@
             font-weight: bold;
             text-decoration: none;
             font-size: 16px;
-            word-break: break-word;
+            word -break: break-word;
         }
 
         .loading-indicator {
             display: none;
             text-align: center;
             margin-top: 20px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
         }
 
         .disabled-btn {
@@ -168,6 +204,7 @@
         <div class="loading-indicator" id="loading-indicator">
             <p>Uploading...</p>
         </div>
+        <div class="toast" id="toast"></div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -251,14 +288,24 @@
                     document.getElementById('link').href = link;
                     document.getElementById('link').textContent = link;
                     document.getElementById('article-C').style.display = 'block';
+                    showToast("Upload successful!");
                     reset();
                 },
                 error: function(error) {
-                    alert("There was an error uploading the file.");
                     document.getElementById('loading-indicator').style.display = 'none';
                     document.getElementById('submitBtn').disabled = false;
+                    showToast("Error uploading the file.");
                 }
             });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
         function reset() {
